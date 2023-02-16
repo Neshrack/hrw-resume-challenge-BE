@@ -3,6 +3,23 @@
         {
             "type": "aws-sam",
             "request": "direct-invoke",
+            "name": "API hrw-resume-challenge:HelloWorldFunction",
+            "invokeTarget": {
+                "target": "api",
+                "templatePath": "${workspaceFolder}/template.yaml",
+                "logicalId": "HelloWorldFunction"
+            },
+            "api": {
+                "path": "/",
+                "httpMethod": "get",
+                "payload": {
+                    "json": {}
+                }
+            }
+        },
+        {
+            "type": "aws-sam",
+            "request": "direct-invoke",
             "name": "hrw-resume-challenge:HelloWorldFunction",
             "invokeTarget": {
                 "target": "template",
