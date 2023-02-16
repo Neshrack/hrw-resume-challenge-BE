@@ -3,10 +3,10 @@ version = 0.1
 [default.deploy]
 [default.deploy.parameters]
 stack_name = "cloud-resume-challenge"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-sb8ibthq1d3a"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-nasoimabf2gi"
 s3_prefix = "cloud-resume-challenge"
 region = "us-east-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
-image_repositories = []
 disable_rollback = true
+image_repositories = []

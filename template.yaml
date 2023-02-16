@@ -13,6 +13,10 @@ Globals:
     Tracing: Active
   Api:
     TracingEnabled: True
+    Cors:
+      AllowMethods: "'*'"
+      AllowHeaders: "'*'"
+      AllowOrigin: "'*'"
 
 Resources:
   
@@ -41,15 +45,15 @@ Resources:
       DistributionConfig:
         DefaultCacheBehavior:
           ViewerProtocolPolicy: allow-all
-          TargetOriginId: hrw-resume-website.s3-website-us-east-1.amazonaws.com
+          TargetOriginId: E25NQRHSZ5T1KJ
           DefaultTTL: 0
           MinTTL: 0
           MaxTTL: 0
           ForwardedValues:
             QueryString: false
         Origins:
-            - DomainName: hrw-resume-website.s3-website-us-east-1.amazonaws.com
-              Id: hrw-resume-website.s3-website-us-east-1.amazonaws.com
+            - DomainName: hunter-walls-resume.com
+              Id: E25NQRHSZ5T1KJ
               CustomOriginConfig:
                 OriginProtocolPolicy: match-viewer
         Enabled: true
