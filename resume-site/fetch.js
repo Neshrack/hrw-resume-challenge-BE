@@ -1,7 +1,7 @@
 const countEl = document.getElementById('vc');
 
 updateVisitCount();
-//Testinglllll
+
 function updateVisitCount() {
     fetch('https://ml28920bv7.execute-api.us-east-1.amazonaws.com/Prod/visitor_count')
         .then(response => {
