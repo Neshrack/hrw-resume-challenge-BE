@@ -21,3 +21,6 @@ jobs:
 
 # sam deploy
       - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name cloud-resume-challenge --s3-bucket aws-sam-cli-managed-default-samclisourcebucket-1j1gqmno9r5d9 --capabilities CAPABILITY_IAM --region us-east-1 
+
+# Sync s3 bucket for website
+      - run: aws s3 sync ./resume-site s3://hrw-resume-website
