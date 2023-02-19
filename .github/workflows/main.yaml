@@ -11,7 +11,7 @@ jobs:
         uses: actions/checkout@master
 
       - name: sam build
-        uses: youyo/aws-sam-action/python3.9@master
+        uses: youyo/aws-sam-action/python3.8@master
         with:
           sam_command: build
         env:
@@ -20,7 +20,7 @@ jobs:
           AWS_DEFAULT_REGION: us-east-1
 
       - name: sam deploy
-        uses: youyo/aws-sam-template/python3.9@master
+        uses: youyo/aws-sam-action/python3.8@master
         with:
           sam_command: deploy
         env:
