@@ -28,7 +28,11 @@ def lambda_handler(event, context):
 
     return {
     'statusCode': 200,
-    'headers': { "Access-Control-Allow-Origin": "*" },
+    'headers': { 
+        "Access-Control-Allow-Headers": "*",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET",  # Allow only GET request
+        },
     'body': get_count('Visitors', 'VisitorCount', 'vc')
 
     }
