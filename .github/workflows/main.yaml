@@ -33,9 +33,9 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
       - name: Change directory to Lambda
         run: cd Lambda
-      - uses: actions/checkout@v3
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
