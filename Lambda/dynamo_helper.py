@@ -30,17 +30,14 @@ def get_count(table, pk, column):
 
 def lambda_handler(event, context):
     update_table('Visitors', 'VisitorCount', 'vc')
-    get_count('Visitors', 'VisitorCount', 'vc')
-
-
+    visitor_count = get_count('Visitors', 'VisitorCount', 'vc')
 
     return {
-    'statusCode': 200,
-    'headers': { 
-        "Access-Control-Allow-Headers": "*",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET",  # Allow only GET request
+        'statusCode': 200,
+        'headers': { 
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET",  # Allow only GET request
         },
-    'body': get_count('Visitors', 'VisitorCount', 'vc')
-
+        'body': str(visitor_count)
     }
