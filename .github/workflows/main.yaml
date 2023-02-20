@@ -43,4 +43,4 @@ jobs:
       - name: Run the testing script
         env: 
           API_GATEWAY_URL: ${{ secrets.API_GATEWAY_URL }}
-        run: pytest src/app-test.py --verbose
+        run: pytest app-test.py --verbose

@@ -1,5 +1,5 @@
 import boto3
-import app
+import dynamo_run
 import smtplib
 
 dynamo_client = boto3.resource('dynamodb')
