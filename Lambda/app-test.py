@@ -4,7 +4,7 @@ import boto3
 import smtplib
 os.environ['AWS_DEFAULT_REGION'] = 'us-east-1'
 
-dynamo_client = boto3.resource('dynamodb', endpoint_url='http://localhost:8000', region_name='us-east-1')
+dynamo_client = boto3.resource('dynamodb', region_name='us-east-1')
 client = boto3.client('sns')
 # def lambda_handler(event, context):
 #     dynamo_helper.update_table('test_Visitors', 'VisitorCount', 'vc')
@@ -14,7 +14,7 @@ client = boto3.client('sns')
 #     lambda_handler(None, None)
 
 def get_count(table, pk, column):
-    dynamodb = boto3.resource('dynamodb', endpoint_url='http://localhost:8000', region_name='us-east-1')
+    dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
     table = dynamo_client.Table(table)
     response = table.get_item(
             Key={pk: 1}
