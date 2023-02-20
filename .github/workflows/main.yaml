@@ -44,7 +44,7 @@ jobs:
           python -m pip install numpy pytest
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: install requests
-        run: install requests
+        run: pip install -r requirements.txt
       - name: installs responses  
         run: pip install responses
       - name: install boto3
