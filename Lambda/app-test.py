@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import Mock
-from lambda_function import lambda_handler
+from dynamo_helper import lambda_handler
 
 class TestLambdaFunction(unittest.TestCase):
 
