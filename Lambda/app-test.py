@@ -3,7 +3,7 @@ import boto3
 
 import smtplib
 
-dynamo_client = boto3.resource('dynamodb')
+dynamo_client = boto3.resource('dynamodb', endpoint_url='http://localhost:8000', region_name='us-east-1')
 client = boto3.client('sns')
 # def lambda_handler(event, context):
 #     dynamo_helper.update_table('test_Visitors', 'VisitorCount', 'vc')
