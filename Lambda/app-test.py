@@ -1,4 +1,4 @@
-import boto3
+
 import dynamo_run
 import smtplib
 
