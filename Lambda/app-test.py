@@ -1,6 +1,6 @@
 import os
 import boto3
-import dynamo_helper
+import lambda/dynamo_helper.py
 import smtplib
 
 dynamo_client = boto3.resource('dynamodb')
