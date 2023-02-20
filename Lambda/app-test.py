@@ -14,7 +14,7 @@ client = boto3.client('sns')
 #     lambda_handler(None, None) yes
 
 def get_count(table, pk, column):
-    dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+    dynamodb = boto3.resource('dynamodb', table='Visitors' region_name='us-east-1')
     table = dynamo_client.Table(table)
     response = table.get_item(
             Key={pk: 1}
