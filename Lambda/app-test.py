@@ -35,4 +35,4 @@ class TestLambdaFunction(unittest.TestCase):
         # Check the response body and DynamoDB table
         expected_body = f'View count updated successfully. Total visitors: 1'
         self.assertEqual(response['body'], expected_body)
-        self.assertEqual(table.get_item(Key={'VisitorCount': 'vc'})['Item']['
+        self.assertEqual(table.get_item(Key={'VisitorCount': 'vc'})['Item']['VisitorCount'], '1')
