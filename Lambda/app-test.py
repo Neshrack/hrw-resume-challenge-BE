@@ -2,6 +2,7 @@ import os
 import boto3
 
 import smtplib
+os.environ['AWS_DEFAULT_REGION'] = 'us-east-1'
 
 dynamo_client = boto3.resource('dynamodb', endpoint_url='http://localhost:8000', region_name='us-east-1')
 client = boto3.client('sns')
