@@ -1,24 +1,38 @@
+import boto3
 import unittest
-from unittest.mock import MagicMock
-import Lambda.dynamo_helper # assuming the lambda function is named lambda_function.py
+from moto import mock_dynamodb2
 
 class TestLambdaFunction(unittest.TestCase):
 
-    def test_increase_view_count(self):
-        # set up a mock DynamoDB client
-        dynamodb_client_mock = MagicMock()
-        lambda_function.dynamodb_client = dynamodb_client_mock
-        
-        # invoke the Lambda function
-        lambda_function.lambda_handler(None, None)
-        
-        # verify that the update_item method was called with the correct parameters
-        dynamodb_client_mock.update_item.assert_called_once_with(
+    @mock_dynamodb2
+    def test_lambda_handler(self):
+        # Setup the mock DynamoDB table
+        dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+        table = dynamodb.create_table(
             TableName='Visitors',
-            Key={'table_id': {'S': '1'}},
-            UpdateExpression='ADD VisitorCount :val',
-            ExpressionAttributeValues={':val': {'N': '1'}}
+            KeySchema=[
+                {
+                    'AttributeName': 'VisitorCount',
+                    'KeyType': 'HASH'
+                }
+            ],
+            AttributeDefinitions=[
+                {
+                    'AttributeName': 'VisitorCount',
+                    'AttributeType': 'S'
+                }
+            ],
+            ProvisionedThroughput={
+                'ReadCapacityUnits': 5,
+                'WriteCapacityUnits': 5
+            }
         )
-
-if __name__ == '__main__':
-    unittest.main()
+        
+        # Call the lambda function
+        from dynamo_helper import lambda_handler
+        response = lambda_handler(None, None)
+        
+        # Check the response body and DynamoDB table
+        expected_body = f'View count updated successfully. Total visitors: 1'
+        self.assertEqual(response['body'], expected_body)
+        self.assertEqual(table.get_item(Key={'VisitorCount': 'vc'})['Item']['
