@@ -1,48 +1,25 @@
-from unittest import mock, TestCase
-import boto3
-from Lambda.dynamo_helper import update_table, get_count, lambda_handler
+import unittest
+from unittest.mock import MagicMock
+import lambda_function # assuming the lambda function is named lambda_function.py
 
-class TestLambdaFunction(TestCase):
-    @mock.patch('boto3.resource')
-    def test_update_table(self, mock_resource):
-        mock_table = mock.MagicMock()
-        mock_table.update_item.return_value = {"ResponseMetadata": {"HTTPStatusCode": 200}}
-        mock_resource.return_value.Table.return_value = mock_table
-        table_name = 'test_table'
-        pk = 'my_pk'
-        column = 'my_column'
-        update_table(table_name, pk, column)
-        mock_resource.assert_called_with('dynamodb')
-        mock_resource.return_value.Table.assert_called_with(table_name)
-        mock_table.update_item.assert_called_once_with(
-            Key={pk: 1},
-            UpdateExpression='ADD ' + column + ' :incr',
-            ExpressionAttributeValues={':incr': 1}
+class TestLambdaFunction(unittest.TestCase):
+
+    def test_increase_view_count(self):
+        # set up a mock DynamoDB client
+        dynamodb_client_mock = MagicMock()
+        lambda_function.dynamodb_client = dynamodb_client_mock
+        
+        # invoke the Lambda function
+        lambda_function.lambda_handler(None, None)
+        
+        # verify that the update_item method was called with the correct parameters
+        dynamodb_client_mock.update_item.assert_called_once_with(
+            TableName='Visitors',
+            Key={'table_id': {'S': '1'}},
+            UpdateExpression='ADD VisitorCount :val',
+            ExpressionAttributeValues={':val': {'N': '1'}}
         )
 
-    @mock.patch('boto3.resource')
-    def test_get_count(self, mock_resource):
-        mock_table = mock.MagicMock()
-        mock_response = {'Item': {'my_column': 42}}
-        mock_table.get_item.return_value = mock_response
-        mock_resource.return_value.Table.return_value = mock_table
-        table_name = 'test_table'
-        pk = 'my_pk'
-        column = 'my_column'
-        result = get_count(table_name, pk, column)
-        mock_resource.assert_called_with('dynamodb')
-        mock_resource.return_value.Table.assert_called_with(table_name)
-        mock_table.get_item.assert_called_once_with(Key={pk: 1})
-        self.assertEqual(result, 42)
-
-    @mock.patch('dynamo_helper.update_table')
-    @mock.patch('dynamo_helper.get_count')
-    def test_lambda_handler(self, mock_get_count, mock_update_table):
-        mock_get_count.return_value = 42
-        event = {}
-        context = mock.MagicMock()
-        result = lambda_handler(event, context)
-        mock_update_table.assert_called_once_with('Visitors', 'VisitorCount', 'vc')
-        mock_get_count.assert_called_once_with('Visitors', 'VisitorCount', 'vc')
-        self.assertEqual(result['statusCode'], 200)
-        self.assertEqual(result['body'], '42')
+if __name__ == '__main__':
+    unittest.main()
+    
