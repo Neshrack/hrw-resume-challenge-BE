@@ -13,7 +13,7 @@ client = boto3.client('sns')
 #     lambda_handler(None, None)
 
 def get_count(table, pk, column):
-    dynamodb = boto3.resource('dynamodb')
+    dynamodb = boto3.resource('dynamodb', endpoint_url='http://localhost:8000', region_name='us-east-1')
     table = dynamo_client.Table(table)
     response = table.get_item(
             Key={pk: 1}
@@ -32,7 +32,7 @@ def get_count(table, pk, column):
 
 
 older_value = get_count('test_Visitors','VisitorCount', 'vc')
-app.update_table('test_Visitors', 'VisitorCount', 'vc')
+dynamo_helper.update_table('test_Visitors', 'VisitorCount', 'vc')
 newer_value = get_count('test_Visitors','VisitorCount', 'vc')
 
 def email_error():
