@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import MagicMock
-import lambda_function # assuming the lambda function is named lambda_function.py
+import Lambda.dynamo_helper # assuming the lambda function is named lambda_function.py
 
 class TestLambdaFunction(unittest.TestCase):
 
@@ -22,4 +22,3 @@ class TestLambdaFunction(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-    
