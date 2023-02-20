@@ -1,54 +1,36 @@
-import os
+import unittest
+from unittest.mock import Mock, patch
 import boto3
+from botocore.exceptions import ClientError
+from your_module import update_table, get_count
 
-import smtplib
-os.environ['AWS_DEFAULT_REGION'] = 'us-east-1'
+# Define a mock DynamoDB resource
+mock_dynamodb = Mock()
 
-dynamo_client = boto3.resource('dynamodb', region_name='us-east-1')
-client = boto3.client('sns')
-# def lambda_handler(event, context):
-#     dynamo_helper.update_table('test_Visitors', 'VisitorCount', 'vc')
+class TestUpdateTable(unittest.TestCase):
+    def setUp(self):
+        self.mock_table = mock_dynamodb.Table('test_table')
+        self.mock_table.update_item = Mock(return_value={'Attributes': {'column': 2}})
 
-
-# if __name__ == '__main__':
-#     lambda_handler(None, None) yes
-
-def get_count(table, pk, column):
-    dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
-    table = dynamo_client.Table(table)
-    response = table.get_item(
-            vc={pk: 1}
+    @patch('boto3.resource', return_value=mock_dynamodb)
+    def test_update_table(self, mock_resource):
+        update_table('test_table', 'pk', 'column')
+        self.mock_table.update_item.assert_called_once_with(
+            Key={'pk': 1},
+            UpdateExpression='ADD column :incr',
+            ExpressionAttributeValues={':incr': 1}
         )
-    count = response['Item'][column]
-    print(response)
-    print ("count is", count)
 
-    return(count)
+class TestGetCount(unittest.TestCase):
+    def setUp(self):
+        self.mock_table = mock_dynamodb.Table('test_table')
+        self.mock_table.get_item = Mock(return_value={'Item': {'column': 2}})
 
-# get_count('test_Visitors', 'VisitorCount', 'vc')
+    @patch('boto3.resource', return_value=mock_dynamodb)
+    def test_get_count(self, mock_resource):
+        count = get_count('test_table', 'pk', 'column')
+        self.assertEqual(count, 2)
+        self.mock_table.get_item.assert_called_once_with(Key={'pk': 1})
 
-# def lambda_handler(event, context):
-#     dynamo_helper.update_table('test_Visitors', 'VisitorCount', 'vc')
-
-
-
-older_value = get_count('test_Visitors','VisitorCount', 'vc')
-dynamo_helper.update_table('test_Visitors', 'VisitorCount', 'vc')
-newer_value = get_count('test_Visitors','VisitorCount', 'vc')
-
-def email_error():
-    s = smtplib.SMTP('email-smtp.us-east-1.amazonaws.com')
-
-    s.connect('email-smtp.us-east-1.amazonaws.com', '587')
-
-    s.starttls()
-    s.login('AKIAVSUUTP6SH6GR7Q62', 'BvsmtAWYGew0+tstYq30Q0EvVaSbyxh2b0gyVXtX')
-
-    msg = 'From: hunter.walls61@gmail.com\nTo: hunter.walls61@gmail.com\nSubject: Test Email\n\nThis is simply an error message, to inform you that your script failed miserably, you baffoon!'
-
-    s.sendmail('hunter.walls61@gmail.com', 'hunter.walls61@gmail.com', msg)
-    return()
-
-
-assert newer_value == older_value + 1, email_error()
-    
+if __name__ == '__main__':
+    unittest.main()
