@@ -1,36 +1,31 @@
 import unittest
-from unittest.mock import Mock, patch
-import boto3
-from botocore.exceptions import ClientError
-from dynamo_helper import update_table, get_count
+from unittest.mock import Mock
+from lambda_function import lambda_handler
 
-# Define a mock DynamoDB resource
-mock_dynamodb = Mock()
+class TestLambdaFunction(unittest.TestCase):
 
-class TestUpdateTable(unittest.TestCase):
-    def setUp(self):
-        self.mock_table = mock_dynamodb.Table('test_table')
-        self.mock_table.update_item = Mock(return_value={'Attributes': {'column': 2}})
+    def test_lambda_handler(self):
+        # Create a mock DynamoDB client and table
+        table_mock = Mock()
+        table_mock.update_item.return_value = {"ResponseMetadata": {"HTTPStatusCode": 200}}
+        table_mock.get_item.return_value = {"Item": {"vc": 42}}
 
-    @patch('boto3.resource', return_value=mock_dynamodb)
-    def test_update_table(self, mock_resource):
-        update_table('test_table', 'pk', 'column')
-        self.mock_table.update_item.assert_called_once_with(
-            Key={'pk': 1},
-            UpdateExpression='ADD column :incr',
-            ExpressionAttributeValues={':incr': 1}
+        # Call the Lambda function with some sample event data and the mock DynamoDB table
+        event = {}
+        context = Mock()
+        result = lambda_handler(event, context, table=table_mock)
+
+        # Verify that the DynamoDB `update_item` and `get_item` methods were called once with the correct parameters
+        table_mock.update_item.assert_called_once_with(
+            Key={"VisitorCount": 1},
+            UpdateExpression="ADD vc :incr",
+            ExpressionAttributeValues={":incr": 1}
         )
+        table_mock.get_item.assert_called_once_with(Key={"VisitorCount": 1})
 
-class TestGetCount(unittest.TestCase):
-    def setUp(self):
-        self.mock_table = mock_dynamodb.Table('test_table')
-        self.mock_table.get_item = Mock(return_value={'Item': {'column': 2}})
-
-    @patch('boto3.resource', return_value=mock_dynamodb)
-    def test_get_count(self, mock_resource):
-        count = get_count('test_table', 'pk', 'column')
-        self.assertEqual(count, 2)
-        self.mock_table.get_item.assert_called_once_with(Key={'pk': 1})
+        # Verify that the Lambda function returned a successful response with the correct visitor count
+        self.assertEqual(result["statusCode"], 200)
+        self.assertEqual(result["body"], "42")
 
 if __name__ == '__main__':
     unittest.main()
