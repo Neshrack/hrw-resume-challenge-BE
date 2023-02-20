@@ -27,7 +27,7 @@ def get_count(table, pk, column):
 
 # get_count('test_Visitors', 'VisitorCount', 'vc')
 
-# def lambda_handler(evelont, context):
+# def lambda_handler(event, context):
 #     dynamo_helper.update_table('test_Visitors', 'VisitorCount', 'vc')
 
 

@@ -8,8 +8,16 @@ def update_table(table, pk, column):
         UpdateExpression='ADD ' + column + ' :incr',
         ExpressionAttributeValues={':incr': 1}
     )
+    # new_counter = table.get_item(
+    #     Key={pk: 1}
+    # )
 
+
+    # print(new_counter['Item'][column])
     print(response)
+#lol
+# if name == 'main':
+#     update_table('test_Visitors', 'VisitorCount', 'vc')
 
 def get_count(table, pk, column):
     dynamodb = boto3.resource('dynamodb')
