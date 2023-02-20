@@ -11,7 +11,7 @@ client = boto3.client('sns')
 
 
 # if __name__ == '__main__':
-#     lambda_handler(None, None)
+#     lambda_handler(None, None) yes
 
 def get_count(table, pk, column):
     dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
