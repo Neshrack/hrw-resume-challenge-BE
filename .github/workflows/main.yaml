@@ -43,8 +43,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install numpy pytest
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      - name: install requests
-        run: pip install -r requirements.txt
+      
       - name: installs responses  
         run: pip install responses
       - name: install boto3
@@ -56,6 +55,8 @@ jobs:
           aws-region: us-east-1
       - name: Install pytest and requests
         run: pip install pytest requests
+      - name: install requests
+        run: pip install -r requirements.txt
       - name: Run the testing script
         env: 
           API_GATEWAY_URL: ${{ secrets.API_GATEWAY_URL }}
