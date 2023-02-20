@@ -39,7 +39,7 @@ jobs:
         with:
           python-version: '3.9' 
       - name: Install pytest and requests
-        run: pip install pytest requests
+        run: pip install boto3
       - name: Run the testing script
         env: 
           API_GATEWAY_URL: ${{ secrets.API_GATEWAY_URL }}
