@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import Mock, patch
 import boto3
 from botocore.exceptions import ClientError
-from your_module import update_table, get_count
+from dynamo_helper import update_table, get_count
 
 # Define a mock DynamoDB resource
 mock_dynamodb = Mock()
