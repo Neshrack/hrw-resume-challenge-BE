@@ -55,9 +55,7 @@ jobs:
           aws-region: us-east-1
       - name: Install pytest and requests
         run: pip install pytest requests
-      - name: install requests
-        run: pip install -r requirements.txt
       - name: Run the testing script
         env: 
           API_GATEWAY_URL: ${{ secrets.API_GATEWAY_URL }}
-        run: pytest Lambda/app-test.py
+        run: pytest -v Lambda/app-test.py
