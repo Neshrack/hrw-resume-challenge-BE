@@ -13,7 +13,7 @@ class TestLambdaFunction(unittest.TestCase):
         # Call the Lambda function with some sample event data and the mock DynamoDB table
         event = {}
         context = Mock()
-        result = lambda_handler(event, context, table=table_mock)
+        result = lambda_handler(event, context, 'Visitors' =table_mock)
 
         # Verify that the DynamoDB `update_item` and `get_item` methods were called once with the correct parameters
         table_mock.update_item.assert_called_once_with(
