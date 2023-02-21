@@ -34,7 +34,10 @@ class TestLambdaHandler(unittest.TestCase):
     def test_increment_visitor_count(self):
         # Set up a mock DynamoDB table
         dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
-        table = dynamodb.create_table(
+        if 'Visitors' in dynamodb.tables.all():
+            table = dynamodb.Table('Visitors')
+        else:
+            table = dynamodb.create_table(
             TableName='Visitors',
             KeySchema=[
                 {
