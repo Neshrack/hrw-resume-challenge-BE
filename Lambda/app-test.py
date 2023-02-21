@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 from dynamo_helper import update_table, get_count
 
 class TestMyModule(unittest.TestCase):
