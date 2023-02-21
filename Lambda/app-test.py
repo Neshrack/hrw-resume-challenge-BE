@@ -31,3 +31,15 @@ class TestMyModule(unittest.TestCase):
         count = get_count('Visitors', 'VisitorCount', 'vc')
         self.table.get_item.assert_called_with(Key={'VisitorCount': 1})
         self.assertEqual(count, 1)
+
+
+class TestLambdaFunction(unittest.TestCase):
+
+    def test_visitor_count(self):
+        old_count = get_count('Visitors', 'VisitorCount', 'vc')
+        update_table('Visitors', 'VisitorCount', 'vc')
+        new_count = get_count('Visitors', 'VisitorCount', 'vc')
+        self.assertGreater(new_count, old_count)
+
+if __name__ == '__main__':
+    unittest.main()
