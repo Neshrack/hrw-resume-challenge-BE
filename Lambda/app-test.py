@@ -17,7 +17,7 @@ class TestLambdaFunction(unittest.TestCase):
         boto3.resource = MagicMock(return_value=dynamodb_mock)
 
         # Call the lambda function
-        from dynamo_helper import lambda_handler
+        from Lambda.dynamo_helper import lambda_handler
         response = lambda_handler(None, None)
 
         # Check the response body and DynamoDB table
