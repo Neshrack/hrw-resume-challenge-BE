@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import MagicMock, patch
-from dynamo_helper import update_table, get_count
+from lambda_function import update_table, get_count
 
 class TestMyModule(unittest.TestCase):
     
@@ -33,7 +33,7 @@ class TestMyModule(unittest.TestCase):
         self.assertEqual(count, 1)
 
 
-class Testdynamo_helper(unittest.TestCase):
+class Testlambda_function(unittest.TestCase):
 
     def test_visitor_count(self):
         old_count = get_count('Visitors', 'VisitorCount', 'vc')
