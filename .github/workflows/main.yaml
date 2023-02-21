@@ -28,6 +28,7 @@ jobs:
  
       
   api_smoke_test:
+      needs: build-deploy
       runs-on: ubuntu-latest
 
       steps:
@@ -57,4 +58,4 @@ jobs:
 
       - name: Test API with requests
         run: |
-          python app-test.py
+          python Lambda/app-test.py
