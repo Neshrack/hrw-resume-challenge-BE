@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import MagicMock
-from Lambda.dynamo_helper import update_table, get_count
+from dynamo_helper import update_table, get_count
 
 class TestMyModule(unittest.TestCase):
 
