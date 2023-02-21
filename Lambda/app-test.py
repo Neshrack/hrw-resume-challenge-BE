@@ -26,3 +26,6 @@ class TestMyModule(unittest.TestCase):
         count = get_count(self.table_name, self.pk, self.column)
         self.table.get_item.assert_called_with(Key={self.pk: 1})
         self.assertEqual(count, 10)
+
+if __name__ == '__main__':
+    unittest.main()
