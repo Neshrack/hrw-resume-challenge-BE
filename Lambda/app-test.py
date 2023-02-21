@@ -3,28 +3,31 @@ from unittest.mock import MagicMock
 from dynamo_helper import update_table, get_count
 
 class TestMyModule(unittest.TestCase):
-
+    
     def setUp(self):
-        self.table_name = 'Visitors'
-        self.pk = 'VisitorCount'
-        self.column = 'vc'
-        self.dynamo_client = MagicMock()
+        # create a mock dynamodb table object
         self.table = MagicMock()
-        self.dynamo_client.Table.return_value = self.table
+        # set up mock response for table.get_item()
+        self.table.get_item.return_value = {'Item': {'vc': 1}}
+        # set up mock response for table.update_item()
+        self.table.update_item.return_value = 'Success'
+        # patch dynamo_client.Table() with the mock table
+        self.patcher = patch('lambda_function.dynamo_client.Table', return_value=self.table)
+        self.patcher.start()
+
+    def tearDown(self):
+        # stop patching dynamo_client.Table()
+        self.patcher.stop()
 
     def test_update_table(self):
-        self.table.update_item.return_value = {'ResponseMetadata': {'HTTPStatusCode': 200}}
-        update_table(self.table_name, self.pk, self.column)
+        update_table('Visitors', 'VisitorCount', 'vc')
         self.table.update_item.assert_called_with(
-            Key={self.pk: 1},
-            UpdateExpression='ADD ' + self.column + ' :incr',
+            Key={'VisitorCount': 1},
+            UpdateExpression='ADD vc :incr',
             ExpressionAttributeValues={':incr': 1}
         )
 
     def test_get_count(self):
-        count = get_count(self.table_name, self.pk, self.column)
-        self.table.get_item.assert_called_with(Key={self.pk: 1})
-        self.assertEqual(count, 10)
-
-if __name__ == '__main__':
-    unittest.main()
+        count = get_count('Visitors', 'VisitorCount', 'vc')
+        self.table.get_item.assert_called_with(Key={'VisitorCount': 1})
+        self.assertEqual(count, 1)
