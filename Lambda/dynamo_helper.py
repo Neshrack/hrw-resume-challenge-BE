@@ -1,8 +1,12 @@
 import boto3
-dynamo_client = boto3.resource('dynamodb')
 
-def update_table(table, pk, column):
-    table = dynamo_client.Table(table)
+dynamo_client = boto3.resource('dynamodb')
+table_name = 'Visitors'
+pk = 'VisitorCount'
+column = 'vc'
+
+def update_table():
+    table = dynamo_client.Table(table_name)
     response = table.update_item(
         Key={pk: 1},
         UpdateExpression='ADD ' + column + ' :incr',
@@ -11,28 +15,24 @@ def update_table(table, pk, column):
 
     print(response)
 
-def get_count(table, pk, column):
-    dynamodb = boto3.resource('dynamodb')
-    table = dynamo_client.Table(table)
+def get_count():
+    table = dynamo_client.Table(table_name)
     response = table.get_item(
-            Key={pk: 1}
-        )
+        Key={pk: 1}
+    )
     count = response['Item'][column]
-    return(count)
+    return count
 
 def lambda_handler(event, context):
-    update_table('Visitors', 'VisitorCount', 'vc')
-    get_count('Visitors', 'VisitorCount', 'vc')
-
-
+    update_table()
+    count = get_count()
 
     return {
-    'statusCode': 200,
-    'headers': { 
-        "Access-Control-Allow-Headers": "*",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET",  # Allow only GET request
+        'statusCode': 200,
+        'headers': { 
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET",  # Allow only GET request
         },
-    'body': get_count('Visitors', 'VisitorCount', 'vc')
-
+        'body': str(count)
     }
