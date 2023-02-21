@@ -22,7 +22,6 @@ class TestMyModule(unittest.TestCase):
         )
 
     def test_get_count(self):
-        self.table.get_item.return_value = {'Item': {self.column: 10}}
         count = get_count(self.table_name, self.pk, self.column)
         self.table.get_item.assert_called_with(Key={self.pk: 1})
         self.assertEqual(count, 10)
