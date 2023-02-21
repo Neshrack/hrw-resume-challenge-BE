@@ -33,7 +33,7 @@ class TestMyModule(unittest.TestCase):
         self.assertEqual(count, 1)
 
 
-class TestLambdaFunction(unittest.TestCase):
+class Testdynamo_helper(unittest.TestCase):
 
     def test_visitor_count(self):
         old_count = get_count('Visitors', 'VisitorCount', 'vc')
