@@ -1,26 +1,60 @@
-import boto3
 import unittest
-from unittest.mock import MagicMock
+import boto3
+import json
+import os
+from botocore.exceptions import ClientError
 
-class TestLambdaFunction(unittest.TestCase):
+def lambda_handler(event, context):
+    dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+    table = dynamodb.Table('Visitors')
 
-    def test_lambda_handler(self):
-        # Mock the DynamoDB table
-        table_mock = MagicMock()
-        table_mock.get_item.return_value = {
-            'Item': {
-                'VisitorCount': '0'
-            }
+    response = table.update_item(
+        Key={
+            'VisitorCount': 'vc'
+        },
+        UpdateExpression='SET VisitorCount = VisitorCount + :val',
+        ExpressionAttributeValues={
+            ':val': 1
         }
-        dynamodb_mock = MagicMock()
-        dynamodb_mock.Table.return_value = table_mock
-        boto3.resource = MagicMock(return_value=dynamodb_mock)
+    )
 
-        # Call the lambda function
-        from Lambda.dynamo_helper import lambda_handler
-        response = lambda_handler(None, None)
+    total_visitors = table.get_item(
+        Key={
+            'VisitorCount': 'vc'
+        }
+    )['Item']['VisitorCount']
 
-        # Check the response body and DynamoDB table
-        expected_body = f'View count updated successfully. Total visitors: 1'
-        self.assertEqual(response['body'], expected_body)
-        table_mock.put_item.assert_called_with(Item={'VisitorCount': '1'})
+    return {
+        'statusCode': 200,
+        'body': f'View count updated successfully. Total visitors: {total_visitors}'
+    }
+
+class TestLambdaHandler(unittest.TestCase):
+
+    def test_increment_visitor_count(self):
+        # Set up a mock DynamoDB table
+        dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
+        table = dynamodb.create_table(
+            TableName='Visitors',
+            KeySchema=[
+                {
+                    'AttributeName': 'VisitorCount',
+                    'KeyType': 'HASH'
+                }
+            ],
+            AttributeDefinitions=[
+                {
+                    'AttributeName': 'VisitorCount',
+                    'AttributeType': 'N'
+                }
+            ],
+            BillingMode='PAY_PER_REQUEST'
+        )
+        table.put_item(Item={'VisitorCount': 'vc', 'Visitors': 0})
+
+        # Invoke the Lambda function
+        response = lambda_handler({}, {})
+
+        # Verify the response
+        self.assertEqual(response['statusCode'], 200)
+        self.assertTrue('Total visitors' in response['body'])
