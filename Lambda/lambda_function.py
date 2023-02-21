@@ -1,7 +1,4 @@
 import boto3
-dynamo_client = boto3.resource('dynamodb')
-
-import boto3
 
 dynamo_client = boto3.resource('dynamodb')
 
