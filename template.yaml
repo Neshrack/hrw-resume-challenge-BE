@@ -83,7 +83,7 @@ Resources:
               Id: E3BH66PB5KP8H2
               CustomOriginConfig:
                 OriginProtocolPolicy: match-viewer
-        Enabled: "true"
+        Enabled: true
         DefaultRootObject: index.html
 
   BucketPolicy:
